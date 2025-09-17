@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N&Q Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%);
+        }
+
+        .heart {
+            color: #f472b6;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header with Title and Rabbit -->
+        <div class="text-center mb-12">
+            <div class="flex justify-center items-center mb-6">
+                <span class="heart text-3xl mr-3">♥</span>
+                <h1 class="text-6xl font-bold text-pink-600 tracking-wide">N&Q</h1>
+                <span class="heart text-3xl ml-3">♥</span>
+            </div>
+            <img src="./rabbit.png"
+                alt="Cute Rabbit" class="mx-auto rounded-full border-4 border-pink-200 shadow-lg mb-4 w-32">
+            <p class="text-pink-500 text-xl font-medium">Our Special Menu</p>
+        </div>
+
+        <!-- Menu Items by Alphabet -->
+        <div class="space-x-12 flex items-center justify-center">
+            <div class="w-1/2 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 p-8">
+                <h1 class="text-3xl font-bold text-pink-600 mb-4 text-center">Menu</h1>
+                <div id="menu-alphabet" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+
+            <div class="w-1/2 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 p-8">
+                <h1 class="text-3xl font-bold text-pink-600 mb-4 text-center">Desserts</h1>
+                <div id="dessert-alphabet" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </div>
+
+        <button id="pick-dish-btn"
+            class="px-6 py-3 bg-pink-500 text-white rounded-full font-bold text-xl shadow-lg hover:bg-pink-600 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 mx-auto mt-8">
+            <span>Chọn món ăn chính</span>
+        </button>
+
+        <div id="love-message" class="justify-center mt-4 text-2xl font-bold text-pink-600 flex hidden items-center gap-2">
+            <span>Anh yêu em nhiều lắm</span>
+            <span class="heart text-3xl">♥</span>
+        </div>
+
+        <!-- Footer Hearts -->
+        <div class="text-center mt-8">
+            <div class="flex justify-center space-x-4 text-2xl">
+                <span class="heart">♥</span>
+                <span class="heart">♥</span>
+                <span class="heart">♥</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    const menuByAlphabet = {
+        A: [],
+        B: ["Bánh mì xíu mại", "Bún mắm", "Bún thái cay", "Bún bò Huế", "Bánh gạo", "Bánh bột lọc da heo"],
+        C: ["Cháo chay", "Cà ri (Thai Express)"],
+        D: [],
+        E: [],
+        F: [],
+        G: [],
+        H: ["Hủ tiếu mì khô"],
+        I: [],
+        J: [],
+        K: [],
+        L: [],
+        M: ["Mì ý", "Mì Ramen", "Mì quảng", "Mì Udon"],
+        N: ["Nem nướng", "Nui nước"],
+        O: [],
+        P: ["Phở"],
+        Q: [],
+        R: [],
+        S: [],
+        T: ["Thịt nướng xiên que"],
+        U: [],
+        V: [],
+        W: [],
+        X: [],
+        Y: [],
+        Z: []
+    };
+
+    const dessertByAlphabet = {
+        A: [],
+        B: ["Bánh tráng trộn"],
+        C: ["Chả cá Hàn Quốc"],
+        D: ["Dâu"],
+        E: [],
+        F: [],
+        G: [],
+        H: [],
+        I: [],
+        J: [],
+        K: ["Kem Dairy Queen"],
+        L: [],
+        M: ["Matcha coffee"],
+        N: ["Nước dừa", "Nho"],
+        O: [],
+        P: [],
+        Q: [],
+        R: [],
+        S: [],
+        T: ["Trà tắc", "Táo"],
+        U: [],
+        V: [],
+        W: [],
+        X: ["Xôi xoài"],
+        Y: [],
+        Z: []
+    };
+
+    const menuContainer = document.getElementById('menu-alphabet');
+    Object.entries(menuByAlphabet).forEach(([letter, dishes]) => {
+        if (!dishes.length) return;
+        const section = document.createElement('div');
+        section.className = 'mb-6';
+        section.innerHTML = `
+        <h2 class="text-2xl font-bold text-pink-600 mb-4 flex items-center">
+            <span class="heart mr-2">♥</span>
+            ${letter}
+        </h2>
+        <ul class="space-y-3">
+            ${dishes.map(dish => `
+                <li class="text-gray-700 text-lg hover:text-pink-600 transition-colors cursor-pointer flex items-center">
+                    <span class="text-pink-300 mr-2">•</span>
+                    ${dish}
+                </li>
+            `).join('')}
+        </ul>
+    `;
+        menuContainer.appendChild(section);
+    });
+
+    const dessertsContainer = document.getElementById('dessert-alphabet');
+    Object.entries(dessertByAlphabet).forEach(([letter, desserts]) => {
+        if (!desserts.length) return;
+        const section = document.createElement('div');
+        section.className = 'mb-6';
+        section.innerHTML = `
+        <h2 class="text-2xl font-bold text-pink-600 mb-4 flex items-center">
+            <span class="heart mr-2">♥</span>
+            ${letter}
+        </h2>
+        <ul class="space-y-3">
+            ${desserts.map(dessert => `
+                <li class="text-gray-700 text-lg hover:text-pink-600 transition-colors cursor-pointer flex items-center">
+                    <span class="text-pink-300 mr-2">•</span>
+                    ${dessert}
+                </li>
+            `).join('')}
+        </ul>
+    `;
+        dessertsContainer.appendChild(section);
+    });
+
+    const mainDishElements = Array.from(document.querySelectorAll('#menu-alphabet li'));
+    // Pick dish button logic
+    const pickBtn = document.getElementById('pick-dish-btn');
+    const loveMsg = document.getElementById('love-message');
+    let pickInterval = null;
+    let pickTimeout = null;
+    function highlightDish(idx) {
+        mainDishElements.forEach((el, i) => {
+            el.classList.remove('text-green-500', 'font-extrabold', 'animate-pulse');
+            el.style.transition = 'color 0.5s';
+            if (i === idx) {
+                el.classList.add('text-green-500', 'font-extrabold', 'animate-pulse');
+            }
+        });
+    }
+    function getRandomDishIdx() {
+        if (mainDishElements.length === 0) return -1;
+        return Math.floor(Math.random() * mainDishElements.length);
+    }
+    if (pickBtn) {
+        pickBtn.addEventListener('click', () => {
+            pickBtn.disabled = true;
+            loveMsg.classList.remove('hidden');
+            loveMsg.classList.add('animate-bounce');
+            let currentIdx = null;
+            pickInterval = setInterval(() => {
+                const idx = getRandomDishIdx();
+                highlightDish(idx);
+                currentIdx = idx;
+            }, 500);
+            pickTimeout = setTimeout(() => {
+                clearInterval(pickInterval);
+                // Chọn món cuối cùng
+                const idx = getRandomDishIdx();
+                highlightDish(idx);
+                pickBtn.disabled = false;
+                loveMsg.classList.add('hidden');
+            }, 5000);
+        });
+    }
+</script>
+
+</html>
