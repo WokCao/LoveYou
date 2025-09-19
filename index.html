@@ -47,8 +47,12 @@
         <!-- Menu Items by Alphabet -->
         <div class="flex flex-col items-center justify-center">
             <div class="w-full bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 p-8">
-                <h1 class="text-3xl font-bold text-pink-600 mb-4 text-center">Menu</h1>
-                <div id="menu-alphabet" class="grid grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <button id="slide-left" class="text-pink-400 hover:text-pink-600 text-3xl font-bold px-2 focus:outline-none">&#8592;</button>
+                    <h1 id="menu-title" class="text-3xl font-bold text-pink-600 text-center flex-1">Breakfast</h1>
+                    <button id="slide-right" class="text-pink-400 hover:text-pink-600 text-3xl font-bold px-2 focus:outline-none">&#8594;</button>
+                </div>
+                <div id="menu-alphabet" class="grid grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
 
             <button id="pick-dish-btn"
@@ -64,7 +68,7 @@
 
             <div class="w-full bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 p-8 mt-8">
                 <h1 class="text-3xl font-bold text-pink-600 mb-4 text-center">Desserts</h1>
-                <div id="dessert-alphabet" class="grid grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                <div id="dessert-alphabet" class="grid grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
         </div>
 
@@ -80,34 +84,148 @@
 </body>
 <script>
 
-    const menuByAlphabet = {
-        A: [],
-        B: ["Bánh mì xíu mại", "Bún mắm", "Bún thái cay", "Bún bò Huế", "Bánh gạo", "Bánh bột lọc da heo", "Bánh canh hẹ", "Bún chả cá"],
-        C: ["Cháo chay", "Cà ri (Thai Express)", "Cơm gà hấp"],
-        D: [],
-        E: [],
-        F: [],
-        G: [],
-        H: ["Hủ tiếu mì khô"],
-        I: [],
-        J: [],
-        K: [],
-        L: [],
-        M: ["Mì ý", "Mì Ramen", "Mì quảng", "Mì Udon"],
-        N: ["Nem nướng", "Nui nước"],
-        O: [],
-        P: ["Phở", "Pizza 4P's"],
-        Q: [],
-        R: [],
-        S: [],
-        T: ["Thịt nướng xiên que"],
-        U: [],
-        V: [],
-        W: [],
-        X: [],
-        Y: [],
-        Z: []
-    };
+    // Menu data for each meal
+    const menuData = [
+        {
+            title: 'Breakfast',
+            menuByAlphabet: {
+                A: [],
+                B: ["Bánh mì xíu mại", "Bún bò Huế", "Bánh canh hẹ", "Bún chả cá", "Bún thịt nướng", "Bún riêu"],
+                C: ["Cháo chay", "Cơm chay"],
+                D: [],
+                E: [],
+                F: [],
+                G: [],
+                H: [],
+                I: [],
+                J: [],
+                K: ["Khoai lang hấp"],
+                L: [],
+                M: ["Mì quảng", "Mì xào chay", "Mì gói (không cay)"],
+                N: ["Nui nước"],
+                O: [],
+                P: ["Phở"],
+                Q: [],
+                R: [],
+                S: ["Soup cua"],
+                T: [],
+                U: [],
+                V: [],
+                W: [],
+                X: [],
+                Y: [],
+                Z: []
+            }
+        },
+        {
+            title: 'Lunch',
+            menuByAlphabet: {
+                A: [],
+                B: [],
+                C: ["Cà ri (Thai Express)", "Cơm gà hấp", "Cơm tấm"],
+                D: [],
+                E: [],
+                F: [],
+                G: [],
+                H: ["Haidilao"],
+                I: [],
+                J: [],
+                K: [],
+                L: [],
+                M: [],
+                N: ["Nem nướng"],
+                O: [],
+                P: ["Pizza 4P's"],
+                Q: [],
+                R: [],
+                S: [],
+                T: [],
+                U: [],
+                V: [],
+                W: [],
+                X: [],
+                Y: [],
+                Z: []
+            }
+        },
+        {
+            title: 'Dinner',
+            menuByAlphabet: {
+                A: [],
+                B: ["Bánh canh cua", "Bánh canh hẹ", "Bún chả cá", "Bún thịt nướng"],
+                C: ["Chang Kang Kung", "Cơm gà hấp"],
+                D: [],
+                E: [],
+                F: [],
+                G: [],
+                H: ["Haidilao", "Hủ tiếu mì khô"],
+                I: [],
+                J: [],
+                K: ["King BBQ"],
+                L: [],
+                M: ["Mì Udon", "Mì ý", "Mì Ramen"],
+                N: ["Nem nướng"],
+                O: [],
+                P: ["Pizza 4P's"],
+                Q: [],
+                R: [],
+                S: [],
+                T: ["Thịt nướng xiên que", "Thai Express"],
+                U: [],
+                V: [],
+                W: [],
+                X: [],
+                Y: [],
+                Z: []
+            }
+        }
+    ];
+
+    let currentMenuIdx = 0;
+    const menuTitle = document.getElementById('menu-title');
+    const menuContainer = document.getElementById('menu-alphabet');
+    const slideLeftBtn = document.getElementById('slide-left');
+    const slideRightBtn = document.getElementById('slide-right');
+
+    function renderMenu(idx) {
+        const { title, menuByAlphabet } = menuData[idx];
+        menuTitle.textContent = title;
+        menuContainer.innerHTML = '';
+        Object.entries(menuByAlphabet).forEach(([letter, dishes]) => {
+            if (!dishes.length) return;
+            const section = document.createElement('div');
+            section.className = 'mb-6';
+            section.innerHTML = `
+            <h2 class="text-sm lg:text-lg font-bold text-pink-600 mb-4 flex items-center">
+                <span class="heart mr-2">♥</span>
+                ${letter}
+            </h2>
+            <ul class="space-y-3">
+                ${dishes.map(dish => `
+                    <li class="text-gray-700 text-xs lg:text-lg hover:text-pink-600 transition-colors cursor-pointer flex items-center">
+                        <span class="text-pink-300 mr-2">•</span>
+                        ${dish}
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+            menuContainer.appendChild(section);
+        });
+    }
+
+    if (slideLeftBtn && slideRightBtn) {
+        slideLeftBtn.addEventListener('click', () => {
+            currentMenuIdx = (currentMenuIdx - 1 + menuData.length) % menuData.length;
+            renderMenu(currentMenuIdx);
+        });
+        slideRightBtn.addEventListener('click', () => {
+            currentMenuIdx = (currentMenuIdx + 1) % menuData.length;
+            renderMenu(currentMenuIdx);
+        });
+    }
+
+    // Initial render
+    renderMenu(currentMenuIdx);
 
     const dessertByAlphabet = {
         A: [],
@@ -138,27 +256,7 @@
         Z: []
     };
 
-    const menuContainer = document.getElementById('menu-alphabet');
-    Object.entries(menuByAlphabet).forEach(([letter, dishes]) => {
-        if (!dishes.length) return;
-        const section = document.createElement('div');
-        section.className = 'mb-6';
-        section.innerHTML = `
-        <h2 class="text-sm lg:text-lg font-bold text-pink-600 mb-4 flex items-center">
-            <span class="heart mr-2">♥</span>
-            ${letter}
-        </h2>
-        <ul class="space-y-3">
-            ${dishes.map(dish => `
-                <li class="text-gray-700 text-xs lg:text-lg hover:text-pink-600 transition-colors cursor-pointer flex items-center">
-                    <span class="text-pink-300 mr-2">•</span>
-                    ${dish}
-                </li>
-            `).join('')}
-        </ul>
-    `;
-        menuContainer.appendChild(section);
-    });
+
 
     const dessertsContainer = document.getElementById('dessert-alphabet');
     Object.entries(dessertByAlphabet).forEach(([letter, desserts]) => {
@@ -182,13 +280,16 @@
         dessertsContainer.appendChild(section);
     });
 
-    const mainDishElements = Array.from(document.querySelectorAll('#menu-alphabet li'));
-    // Pick dish button logic
+    // Pick dish button logic (updated to work with sliding menu)
+    function getMainDishElements() {
+        return Array.from(document.querySelectorAll('#menu-alphabet li'));
+    }
     const pickBtn = document.getElementById('pick-dish-btn');
     const loveMsg = document.getElementById('love-message');
     let pickInterval = null;
     let pickTimeout = null;
     function highlightDish(idx) {
+        const mainDishElements = getMainDishElements();
         mainDishElements.forEach((el, i) => {
             el.classList.remove('text-green-500', 'font-extrabold', 'animate-pulse');
             el.style.transition = 'color 0.5s';
@@ -198,6 +299,7 @@
         });
     }
     function getRandomDishIdx() {
+        const mainDishElements = getMainDishElements();
         if (mainDishElements.length === 0) return -1;
         return Math.floor(Math.random() * mainDishElements.length);
     }
